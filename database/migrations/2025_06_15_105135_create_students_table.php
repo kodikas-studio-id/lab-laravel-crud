@@ -9,17 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('students', function (Blueprint $table) {
-            $table->id();
-            $table->string('student_number');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->foreignId('study_program_id')->constrained('study_programs');
-            $table->timestamps();
-        });
-    }
+public function up(): void
+{
+    Schema::create('students', function (Blueprint $table) {
+        $table->id();
+        $table->string('student_number');
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->foreignId('study_program_id')->constrained('study_programs');
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
