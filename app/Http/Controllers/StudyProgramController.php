@@ -8,13 +8,52 @@ use Illuminate\Support\Facades\Log;
 
 class StudyProgramController extends Controller
 {
+    // Data statis program studi dan mahasiswa
+    protected $studyPrograms = [
+        [
+            'id' => 1,
+            'name' => 'Informatika',
+        ],
+        [
+            'id' => 2,
+            'name' => 'Sistem Informasi',
+        ],
+    ];
+
+    protected $students = [
+        [
+            'id' => 1,
+            'name' => 'Ayu Larasati',
+            'student_number' => '20210001',
+            'email' => 'ayu@example.com',
+            'study_program_id' => 1,
+        ],
+        [
+            'id' => 2,
+            'name' => 'Budi Santoso',
+            'student_number' => '20210002',
+            'email' => 'budi@example.com',
+            'study_program_id' => 2,
+        ],
+        [
+            'id' => 3,
+            'name' => 'Citra Andini',
+            'student_number' => '20210003',
+            'email' => 'citra@example.com',
+            'study_program_id' => 1,
+        ],
+    ];
+
     public function index(Request $request)
     {
         $keyword = $request->query('q');
-        $studyPrograms = DB::table('study_programs')->when($keyword, function($query) use ($keyword){
-            $query->where('name', 'like', '%'. $keyword. '%');
-        })->orderByDesc('created_at')->get();
-        return view('pages.study-programs.index', compact('studyPrograms'));
+
+        $studyPrograms = collect($this->studyPrograms);
+
+
+        return view('pages.study-programs.index', [
+            'studyPrograms' => $studyPrograms->values()
+        ]);
     }
 
     public function create()
@@ -24,94 +63,45 @@ class StudyProgramController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:study_programs,name',
-        ]);
-
-        try {
-            DB::table('study_programs')->insert([
-                'name' => $request->name,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            return redirect()->route('study-programs.index')->with('success', 'Study Program created successfully.');
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        // Simulasi penyimpanan
+        return redirect()->route('study-programs.index')->with('success', 'Study Program created successfully (simulasi).');
     }
 
     public function show($id)
     {
-        try {
-            $studyProgram = DB::table('study_programs')->find($id);
+        $studyProgram = collect($this->studyPrograms)->firstWhere('id', $id);
 
-            if (!$studyProgram) {
-                return redirect()->route('study-programs.index')->with('error', 'Study Program not found.');
-            }
-
-            $students = DB::table('students')
-                ->where('students.study_program_id', $id)
-                ->get();
-
-            return view('pages.study-programs.show', compact('studyProgram', 'students'));
-        } catch (\Exception $e) {
-            Log::error('Failed to show study program: ' . $e->getMessage());
-            throw $e;
+        if (!$studyProgram) {
+            return redirect()->route('study-programs.index')->with('error', 'Study Program not found.');
         }
+
+        $students = collect($this->students)
+            ->where('study_program_id', $id)
+            ->values();
+
+        return view('pages.study-programs.show', compact('studyProgram', 'students'));
     }
 
     public function edit($id)
     {
-        try {
-            $studyProgram = DB::table('study_programs')->find($id);
+        $studyProgram = collect($this->studyPrograms)->firstWhere('id', $id);
 
-            if (!$studyProgram) {
-                return redirect()->route('study-programs.index')->with('error', 'Study Program not found.');
-            }
-
-            return view('pages.study-programs.edit', compact('studyProgram'));
-        } catch (\Exception $e) {
-            Log::error('Failed to load edit form: ' . $e->getMessage());
-            return redirect()->route('study-programs.index')->with('error', 'Error loading edit form.');
+        if (!$studyProgram) {
+            return redirect()->route('study-programs.index')->with('error', 'Study Program not found.');
         }
+
+        return view('pages.study-programs.edit', compact('studyProgram'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:study_programs,name,' . $id,
-        ]);
-        try {
-            $updated = DB::table('study_programs')->where('id', $id)->update([
-                'name' => $request->name,
-                'updated_at' => now(),
-            ]);
-
-            if (!$updated) {
-                return redirect()->route('study-programs.index')->with('error', 'No changes made or program not found.');
-            }
-
-            return redirect()->route('study-programs.index')->with('success', 'Study Program updated successfully.');
-        } catch (\Exception $e) {
-            Log::error('Failed to update study program: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to update study program.');
-        }
+        // Simulasi update
+        return redirect()->route('study-programs.index')->with('success', 'Study Program updated successfully (simulasi).');
     }
 
     public function destroy($id)
     {
-        try {
-            $deleted = DB::table('study_programs')->where('id', $id)->delete();
-
-            if (!$deleted) {
-                return redirect()->route('study-programs.index')->with('error', 'Study Program not found or already deleted.');
-            }
-
-            return redirect()->route('study-programs.index')->with('success', 'Study Program deleted successfully.');
-        } catch (\Exception $e) {
-            Log::error('Failed to delete study program: ' . $e->getMessage());
-            throw $e;
-        }
+        // Simulasi delete
+        return redirect()->route('study-programs.index')->with('success', 'Study Program deleted successfully (simulasi).');
     }
 }

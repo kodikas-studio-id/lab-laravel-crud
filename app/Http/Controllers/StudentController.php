@@ -14,12 +14,22 @@ class StudentController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $q = $request->query('q');
-        $students = Student::with('studyProgram')->when($q, function($query) use($q){
-            $query->where('name','like', '%' . $q . '%');
-            $query->orWhere('student_number', 'like', '%' . $q . '%');
-            $query->orWhere('email', 'like', '%' . $q . '%');
-        })->latest()->get();
+        $students = collect([
+            [
+                'id' => 1,
+                'name' => 'Ayu Larasati',
+                'student_number' => '20210001',
+                'email' => 'ayu@example.com',
+                'studyProgram' => ['name' => 'Informatika']
+            ],
+            [
+                'id' => 2,
+                'name' => 'Budi Santoso',
+                'student_number' => '20210002',
+                'email' => 'budi@example.com',
+                'studyProgram' => ['name' => 'Sistem Informasi']
+            ],
+        ]);
         return view('pages.students.index', [
             'students' => $students
         ]);
@@ -30,7 +40,10 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $studyPrograms = StudyProgram::get();
+        $studyPrograms = collect([
+            (object)['id' => 1, 'name' => 'Informatika'],
+            (object)['id' => 2, 'name' => 'Sistem Informasi'],
+        ]);
         return view('pages.students.create', [
             'studyPrograms' => $studyPrograms
         ]);
@@ -48,18 +61,11 @@ class StudentController extends Controller
                 'study_program_id' => 'required|exists:study_programs,id',
                 'email' => 'required|email|unique:students,email',
             ]);
-            Student::create([
-                'name' => $request->name,
-                'student_number' => $request->student_number,
-                'student_number' => $request->student_number,
-                'study_program_id' => $request->study_program_id,
-                'email' => $request->email,
-            ]);
+       
             return redirect()->route('students.index')->with('success', 'Success create student!');
         } catch (\Throwable $th) {
             Log::debug($th);
             throw $th;
-            // return redirect()->route('students.index')->with('error', "Something wrong!");
         }
     }
 
@@ -68,7 +74,13 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        $student = Student::find($id);
+        $student = (object)[
+            'id' => $id,
+            'name' => 'Demo Mahasiswa',
+            'student_number' => '20219999',
+            'email' => 'demo@example.com',
+            'studyProgram' => (object)['name' => 'Teknik Komputer']
+        ];
         return view('pages.students.show', [
             'student' => $student
         ]);
@@ -79,8 +91,19 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        $student = Student::find($id);
-        $studyPrograms = StudyProgram::get();
+        $student = (object)[
+            'id' => $id,
+            'name' => 'Demo Mahasiswa',
+            'student_number' => '20219999',
+            'email' => 'demo@example.com',
+            'study_program_id' => '1',
+            'studyProgram' => (object)['name' => 'Teknik Komputer']
+        ];
+        $studyPrograms = collect([
+            (object)['id' => 1, 'name' => 'Informatika'],
+            (object)['id' => 2, 'name' => 'Sistem Informasi'],
+        ]);
+
         return view('pages.students.edit', [
             'student' => $student,
             'studyPrograms' => $studyPrograms
@@ -100,12 +123,7 @@ class StudentController extends Controller
                 'email' => 'required|email',
             ]);
 
-            Student::where('id', $id)->update([
-                'name' => $request->name,
-                'student_number' => $request->student_number,
-                'study_program_id' => $request->study_program_id,
-                'email' => $request->email,
-            ]);
+           
             return redirect()->route('students.index')->with('success', 'Success update student!');
         } catch (\Throwable $th) {
             if ($th->getCode() == 23000) {
@@ -121,7 +139,6 @@ class StudentController extends Controller
     public function destroy(string $id)
     {
         try {
-            Student::where('id', $id)->delete();
             return redirect()->route('students.index')->with('success', 'Student delete!');
         } catch (\Throwable $th) {
             throw $th;

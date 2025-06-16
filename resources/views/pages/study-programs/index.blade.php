@@ -42,13 +42,13 @@
                     @forelse ($studyPrograms as $index => $program)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-4 py-2">{{ $index + 1 }}</td>
-                            <td class="px-4 py-2">{{ $program->name }}</td>
+                            <td class="px-4 py-2">{{ $program['name'] }}</td>
                             <td class="px-4 py-2 flex space-x-2">
-                                <a href="{{ route('study-programs.show', $program->id) }}"
+                                <a href="{{ route('study-programs.show', $program['id']) }}"
                                    class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded-md text-sm shadow">Show</a>
-                                <a href="{{ route('study-programs.edit', $program->id) }}"
+                                <a href="{{ route('study-programs.edit', $program['id']) }}"
                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm shadow">Edit</a>
-                                <form method="POST" action="{{ route('study-programs.destroy', $program->id) }}" onsubmit="return confirm('Are you sure?')">
+                                <form method="POST" action="{{ route('study-programs.destroy', $program['id']) }}" onsubmit="return confirm('Are you sure?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm shadow">

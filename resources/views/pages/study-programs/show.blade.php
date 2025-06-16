@@ -9,7 +9,7 @@
 
         <div class="mb-4">
             <p class="text-sm text-gray-500">Program Name</p>
-            <p class="text-lg text-gray-900 font-semibold">{{ $studyProgram->name }}</p>
+            <p class="text-lg text-gray-900 font-semibold">{{ $studyProgram['name'] }}</p>
         </div>
 
         <div class="mt-6 flex justify-end space-x-3">
@@ -17,7 +17,7 @@
                 class="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">
                 Back
             </a>
-            <a href="{{ route('study-programs.edit', $studyProgram->id) }}"
+            <a href="{{ route('study-programs.edit', $studyProgram['id']) }}"
                 class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
                 Edit
             </a>
@@ -43,16 +43,16 @@
                         @forelse ($students as $index => $student)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-4 py-2">{{ $index + 1 }}</td>
-                                <td class="px-4 py-2">{{ $student->name }}</td>
-                                <td class="px-4 py-2">{{ $student->student_number }}</td>
-                                <td class="px-4 py-2">{{ $student->email }}</td>
+                                <td class="px-4 py-2">{{ $student['name'] }}</td>
+                                <td class="px-4 py-2">{{ $student['student_number'] }}</td>
+                                <td class="px-4 py-2">{{ $student['email'] }}</td>
                                 <td class="px-4 py-2 flex space-x-2">
-                                    <a href="{{ route('students.show', $student->id) }}"
+                                    <a href="{{ route('students.show', $student['id']) }}"
                                         class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded-md text-sm shadow">Show</a>
                                   
-                                    <a href="{{ route('students.edit', $student->id) }}"
+                                    <a href="{{ route('students.edit', $student['id']) }}"
                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm shadow">Edit</a>
-                                    <form method="POST" action="{{ route('students.destroy', $student->id) }}" onsubmit="return confirm('Are you sure?')">
+                                    <form method="POST" action="{{ route('students.destroy', $student['id']) }}" onsubmit="return confirm('Are you sure?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm shadow">

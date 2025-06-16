@@ -5,14 +5,14 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-xl font-semibold mb-4">Edit Study Program</h2>
 
-        <form action="{{ route('study-programs.update', $studyProgram->id) }}" method="POST" class="bg-white p-6 rounded shadow">
+        <form action="{{ route('study-programs.update', $studyProgram['id']) }}" method="POST" class="bg-white p-6 rounded shadow">
             @csrf
             @method('PATCH')
 
             <div class="mb-4">
                 <label for="name" class="block font-medium mb-1">Program Name</label>
                 <input type="text" name="name" id="name"
-                       value="{{ old('name', $studyProgram->name) }}"
+                       value="{{ old('name', $studyProgram['name']) }}"
                        class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:ring-blue-200 @error('name') border-red-500 @enderror">
                 @error('name') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
             </div>

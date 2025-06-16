@@ -46,7 +46,7 @@
                             <td class="px-4 py-2">{{ $student->email }}</td>
                             <td class="px-4 py-2">{{ $student->studyProgram->name }}</td>
                             <td class="px-4 py-2 flex space-x-2">
-                                <a href="{{ route('students.show', $student->id) }}"
+                                <a href="{{ route('students.edit', $student->id) }}"
                                     class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded-md text-sm shadow">Show</a>
                               
                                 <a href="{{ route('students.edit', $student->id) }}"
