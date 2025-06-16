@@ -26,6 +26,6 @@ Route::prefix('study-programs')->group(function () {
     Route::post('/', [StudyProgramController::class, 'store'])->name('study-programs.store');
     Route::get('/{id}', [StudyProgramController::class, 'show'])->name('study-programs.show');
     Route::get('/{id}/edit', [StudyProgramController::class, 'edit'])->name('study-programs.edit');
-    Route::patch('/{id}', [StudyProgramController::class, 'show'])->name('study-programs.update');
+    Route::patch('/{id}', [StudyProgramController::class, 'update'])->name('study-programs.update');
     Route::delete('/{id}', [StudyProgramController::class, 'destroy'])->name('study-programs.destroy');
 });

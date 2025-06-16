@@ -8,15 +8,18 @@ use Illuminate\Support\Facades\Log;
 
 class StudyProgramController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $programs = DB::table('study_programs')->orderByDesc('created_at')->get();
-        return view('study-programs.index', compact('programs'));
+        $keyword = $request->query('q');
+        $studyPrograms = DB::table('study_programs')->when($keyword, function($query) use ($keyword){
+            $query->where('name', 'like', '%'. $keyword. '%');
+        })->orderByDesc('created_at')->get();
+        return view('pages.study-programs.index', compact('studyPrograms'));
     }
 
     public function create()
     {
-        return view('study-programs.create');
+        return view('pages.study-programs.create');
     }
 
     public function store(Request $request)
@@ -34,8 +37,7 @@ class StudyProgramController extends Controller
 
             return redirect()->route('study-programs.index')->with('success', 'Study Program created successfully.');
         } catch (\Exception $e) {
-            Log::error('Failed to store study program: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to create study program.');
+            throw $e;
         }
     }
 
@@ -48,10 +50,14 @@ class StudyProgramController extends Controller
                 return redirect()->route('study-programs.index')->with('error', 'Study Program not found.');
             }
 
-            return view('study-programs.show', compact('studyProgram'));
+            $students = DB::table('students')
+                ->where('students.study_program_id', $id)
+                ->get();
+
+            return view('pages.study-programs.show', compact('studyProgram', 'students'));
         } catch (\Exception $e) {
             Log::error('Failed to show study program: ' . $e->getMessage());
-            return redirect()->route('study-programs.index')->with('error', 'Error retrieving study program.');
+            throw $e;
         }
     }
 
@@ -64,7 +70,7 @@ class StudyProgramController extends Controller
                 return redirect()->route('study-programs.index')->with('error', 'Study Program not found.');
             }
 
-            return view('study-programs.edit', compact('studyProgram'));
+            return view('pages.study-programs.edit', compact('studyProgram'));
         } catch (\Exception $e) {
             Log::error('Failed to load edit form: ' . $e->getMessage());
             return redirect()->route('study-programs.index')->with('error', 'Error loading edit form.');
@@ -76,7 +82,6 @@ class StudyProgramController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:study_programs,name,' . $id,
         ]);
-
         try {
             $updated = DB::table('study_programs')->where('id', $id)->update([
                 'name' => $request->name,
@@ -106,7 +111,7 @@ class StudyProgramController extends Controller
             return redirect()->route('study-programs.index')->with('success', 'Study Program deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Failed to delete study program: ' . $e->getMessage());
-            return redirect()->route('study-programs.index')->with('error', 'Failed to delete study program.');
+            throw $e;
         }
     }
 }

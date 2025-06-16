@@ -55,12 +55,14 @@
             @enderror
         </div>
 
-        <div class="flex items-center justify-between pt-4">
+        <div class="flex items-center justify-end pt-4 gap-3">
             <button type="submit"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 Save
             </button>
-            <a href="{{ route('students.index') }}" class="text-sm font-medium text-blue-600 hover:underline">← Cancel</a>
+            <a href="{{ route('study-programs.index') }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">
+                Cancel
+            </a>
         </div>
     </form>
 </div>

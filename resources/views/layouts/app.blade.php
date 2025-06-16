@@ -34,42 +34,52 @@
 
     {{-- SweetAlert2 Flash + Validation Handling --}}
     <script>
-        @if ($errors->any())
-            let message = '';
-            @foreach ($errors->all() as $error)
-                message += `- {{ $error }}\n`;
-            @endforeach
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                text: message,
-                customClass: {
-                    popup: 'text-start'
-                }
-            });
-        @endif
-
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '{{ session('success') }}',
-                timer: 3000,
-                showConfirmButton: true
-            });
-        @endif
-
-        @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: '{{ session('error') }}',
-                timer: 3000,
-                showConfirmButton: true
-            });
-        @endif
+        // Mencegah SweetAlert muncul ulang ketika kembali dari tombol Back
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || (window.performance && window.performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
+                // Jangan tampilkan apa pun karena ini halaman dari cache
+                return;
+            }
+    
+            @if ($errors->any())
+                let message = '';
+                @foreach ($errors->all() as $error)
+                    message += `- {{ $error }}\n`;
+                @endforeach
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: message,
+                    customClass: {
+                        popup: 'text-start'
+                    }
+                });
+            @endif
+    
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: '{{ session('success') }}',
+                    timer: 3000,
+                    showConfirmButton: true
+                });
+            @endif
+    
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}',
+                    timer: 3000,
+                    showConfirmButton: true
+                });
+            @endif
+        });
     </script>
-
+    <script>
+        console.log('Lab ini digunakan untuk praktik module kodikas studio kode lab [LAB-LARAVEL-CRUD-05]')
+    </script>
     @stack('script')
 </body>
 </html>
